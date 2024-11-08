@@ -20,7 +20,6 @@ Serial.print(res); /* displaying the photoresistor value on serial monitor */
     if(res < 700) { /* when the value of sensor is less than 100 */
 Serial.println(" : Low intensity ");
 digitalWrite(LED,LOW); /* keep the LED off*/
-
     }
     else { /* otherwise turn the light on */
 Serial.println(" : High Intensity ");
@@ -28,6 +27,13 @@ digitalWrite(LED,HIGH); /* turn the LED on*/
 
     }
 
+    // Read data sample
+    String data = Serial.readStringUntil('\n');
+    Serial.print("You sent me: ");
+    Serial.println(data);
+
+
+  // Temperature measurement sample.
   float temp_val;
   int tempADCValue = analogRead(LM35); /* Read Temperature */
   temp_val = (tempADCValue * 4.88);	/* Convert adc value to equivalent voltage */
@@ -35,6 +41,8 @@ digitalWrite(LED,HIGH); /* turn the LED on*/
   Serial.print("Temperature = ");
   Serial.print(temp_val);
   Serial.print(" Degree Celsius\n");
-
+  data = Serial.readStringUntil('\n');
+  Serial.print("You sent me: ");
+  Serial.println(data);
 delay(1000);
 }
