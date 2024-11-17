@@ -12,12 +12,14 @@ namespace IOTDevice
 
             if (parameterRes.IsIOT)
             {
+                Console.WriteLine("IOT Hub manager code");
                 var hubManager = new IOTHubManager();
 
                 hubManager.SendSampleData();
             }
             else if (parameterRes.IsGPIO)
             {
+                Console.WriteLine("GPIO controller code");
                 var controller = new GPIOController();
                 controller.GPIOSample();
             }
