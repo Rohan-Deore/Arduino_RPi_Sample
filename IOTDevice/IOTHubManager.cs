@@ -2,42 +2,45 @@ using System.Configuration;
 using Microsoft.Azure.Devices.Client;
 using NLog;
 
-internal class IOTHubManager
+namespace IOTDevice
 {
-    private DeviceClient? client;
-    private string? machineName = string.Empty;
-
-    private Logger logger = LogManager.GetCurrentClassLogger();
-
-    internal IOTHubManager()
+    internal class IOTHubManager
     {
-        logger.Debug("IOTHub manager constructor called");
-        var connectionString = ConfigurationManager.AppSettings["ConnectionString"];
-        client = DeviceClient.CreateFromConnectionString(connectionString);
-        machineName = ConfigurationManager.AppSettings["MachineName"];
+        private DeviceClient? client;
+        private string? machineName = string.Empty;
 
-        if (machineName == null)
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
+        internal IOTHubManager()
         {
-            machineName = string.Empty;
-        }
-    }
+            logger.Debug("IOTHub manager constructor called");
+            var connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+            client = DeviceClient.CreateFromConnectionString(connectionString);
+            machineName = ConfigurationManager.AppSettings["MachineName"];
 
-    public void SendSampleData()
-    {
-        logger.Debug("Sample data message sent.");
-        SendMessage("This is user message.");
-    }
-
-    public void SendMessage(string message)
-    {
-        if(machineName == null)
-        {
-            machineName = string.Empty;
-            return;
+            if (machineName == null)
+            {
+                machineName = string.Empty;
+            }
         }
 
-        logger.Debug($"Message sent : {message}");
-        IOTMessage iotMsg = new IOTMessage() { MachineName = machineName, Message = message };
-        client?.SendEventAsync(iotMsg.ToMessage());
+        public void SendSampleData()
+        {
+            logger.Debug("Sample data message sent.");
+            SendMessage("This is user message.");
+        }
+
+        public void SendMessage(string message)
+        {
+            if (machineName == null)
+            {
+                machineName = string.Empty;
+                return;
+            }
+
+            logger.Debug($"Message sent : {message}");
+            IOTMessage iotMsg = new IOTMessage() { MachineName = machineName, Message = message };
+            client?.SendEventAsync(iotMsg.ToMessage());
+        }
     }
 }

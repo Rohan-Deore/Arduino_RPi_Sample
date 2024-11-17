@@ -1,28 +1,32 @@
 ﻿using CommandLine;
 
-public class Program
+namespace IOTDevice
 {
-    public static void Main(string[] args)
+    public class Program
     {
-        Console.WriteLine("IOT Hub sample started!");
-
-        var parameterRes = Parser.Default.ParseArguments<Parameter>(args).Value;
-
-        if (parameterRes.IsIOT)
+        public static void Main(string[] args)
         {
-            var hubManager = new IOTHubManager();
+            Console.WriteLine("IOT Hub sample started!");
 
-            hubManager.SendSampleData();
-        }
-        else if (parameterRes.IsGPIO)
-        {
-            // GPIO sample here
-        }
-        else
-        {
-            Console.WriteLine("Nothing was executed!");
-        }
+            var parameterRes = Parser.Default.ParseArguments<Parameter>(args).Value;
 
-        Console.WriteLine("IOT Hub sample finished!");
+            if (parameterRes.IsIOT)
+            {
+                var hubManager = new IOTHubManager();
+
+                hubManager.SendSampleData();
+            }
+            else if (parameterRes.IsGPIO)
+            {
+                var controller = new GPIOController();
+                controller.GPIOSample();
+            }
+            else
+            {
+                Console.WriteLine("Nothing was executed!");
+            }
+
+            Console.WriteLine("IOT Hub sample finished!");
+        }
     }
 }
