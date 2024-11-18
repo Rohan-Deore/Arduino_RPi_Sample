@@ -15,8 +15,8 @@ namespace IOTDevice
         {
             logger.Debug("IOTHub manager constructor called");
             var connectionString = ConfigurationManager.AppSettings["ConnectionString"];
-            client = DeviceClient.CreateFromConnectionString(connectionString);
             machineName = ConfigurationManager.AppSettings["MachineName"];
+            client = DeviceClient.CreateFromConnectionString(connectionString);
 
             if (machineName == null)
             {
