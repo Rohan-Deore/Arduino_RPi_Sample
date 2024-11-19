@@ -1,3 +1,6 @@
 IOTDevice/obj/
 IOTDevice/bin/
 .vs/
+/IOTDevice/App_Prod.config
+IOTHub/bin/
+IOTHub/obj/
