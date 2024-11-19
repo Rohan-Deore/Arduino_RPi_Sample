@@ -6,14 +6,14 @@ namespace IOTDevice
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("IOT Hub sample started!");
+            Console.WriteLine("IOT Device sample started!");
 
             var parameterRes = Parser.Default.ParseArguments<Parameter>(args).Value;
 
             if (parameterRes.IsIOT)
             {
-                Console.WriteLine("IOT Hub manager code");
-                var hubManager = new IOTHubManager();
+                Console.WriteLine("IOT Device manager code");
+                var hubManager = new IOTDeviceManager();
 
                 hubManager.SendSampleData();
             }
@@ -28,7 +28,7 @@ namespace IOTDevice
                 Console.WriteLine("Nothing was executed!");
             }
 
-            Console.WriteLine("IOT Hub sample finished!");
+            Console.WriteLine("IOT Device sample finished!");
         }
     }
 }

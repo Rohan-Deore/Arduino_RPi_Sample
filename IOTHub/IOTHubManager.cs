@@ -1,22 +1,23 @@
-using System.Configuration;
-using Microsoft.Azure.Devices.Client;
+﻿using System.Configuration;
+using Microsoft.Azure.Devices;
 using NLog;
 
-namespace IOTDevice
+namespace IOTHub
 {
     internal class IOTHubManager
     {
-        private DeviceClient? client;
+        private ServiceClient? client;
         private string? machineName = string.Empty;
-
+        private string? deviceID = string.Empty;
         private Logger logger = LogManager.GetCurrentClassLogger();
 
         internal IOTHubManager()
         {
             logger.Debug("IOTHub manager constructor called");
-            var connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+            var connectionString = ConfigurationManager.AppSettings["ConnectionStringHub"];
             machineName = ConfigurationManager.AppSettings["MachineName"];
-            client = DeviceClient.CreateFromConnectionString(connectionString);
+            deviceID = ConfigurationManager.AppSettings["DeviceID"];
+            client = ServiceClient.CreateFromConnectionString(connectionString);
 
             if (machineName == null)
             {
@@ -27,7 +28,7 @@ namespace IOTDevice
         public void SendSampleData()
         {
             logger.Debug("Sample data message sent.");
-            SendMessage("This is user message.");
+            SendMessage("This is server message.");
         }
 
         public void SendMessage(string message)
@@ -40,7 +41,7 @@ namespace IOTDevice
 
             logger.Debug($"Message sent : {message}");
             IOTMessage iotMsg = new IOTMessage() { MachineName = machineName, Message = message };
-            client?.SendEventAsync(iotMsg.ToMessage());
+            client?.SendAsync(deviceID, iotMsg.ToMessage());
         }
     }
 }
