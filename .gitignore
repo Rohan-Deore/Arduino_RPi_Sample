@@ -11,3 +11,5 @@ HomeAutomationServer/bin/
 HomeAutomationServer/obj/
 Model/bin/
 Model/obj/
+/HomeAutomationDevice/App_Prod.config
+/HomeAutomationServer/App_Prod.config
