@@ -5,3 +5,9 @@ IOTDevice/bin/
 /IOTHub/App_Prod.config
 IOTHub/bin/
 IOTHub/obj/
+HomeAutomationDevice/bin/
+HomeAutomationDevice/obj/
+HomeAutomationServer/bin/
+HomeAutomationServer/obj/
+Model/bin/
+Model/obj/
