@@ -17,11 +17,23 @@ namespace IOTDevice
             int count = 0;
             while (count++ < 10)
             {
-                logger.Debug($"Pin {pin} status : {ledOn}");
+                logger.Debug($"Write Pin {pin} status : {ledOn}");
                 controller.Write(pin, ((ledOn) ? PinValue.High : PinValue.Low));
                 Thread.Sleep(1000);
                 ledOn = !ledOn;
             }
+        }
+
+        public void GPIOReadSample()
+        {
+            using (var controller = new GpioController())
+            {
+                int pin = 23;
+                controller.OpenPin(pin, PinMode.Input); 
+                var readValue = (bool)controller.Read(pin);
+                logger.Debug($"Read Pin {pin} status : {readValue}");
+            }
+
         }
     }
 }
