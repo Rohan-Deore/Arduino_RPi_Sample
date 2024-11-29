@@ -22,7 +22,17 @@ namespace HomeAutomationDevice
                 return;
             }
 
-            IOTDeviceManager deviceMgr = new IOTDeviceManager(connectionString, machineName);
+            IOTDeviceManager deviceMgr;
+            try
+            {
+                deviceMgr = new IOTDeviceManager(connectionString, machineName);
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal($"Device manager creation failed due to : {ex}");
+                return;
+            }
+
             deviceMgr.Run();
         }
     }

@@ -57,7 +57,7 @@ namespace Model
                 var readValue = (bool)controller.Read(pin);
                 logger.Debug($"Read Pin {pin} status : {readValue}");
                 IOTMessage message = new IOTMessage(machineName, "Door", pin, readValue);
-                deviceClient.SendEventAsync(message.ToClientMessage());
+                deviceClient?.SendEventAsync(message.ToClientMessage());
                 Thread.Sleep(10000); // 10 sec sleep
             }
         }
@@ -71,7 +71,7 @@ namespace Model
         {
             if (msg.DeviceName != machineName)
             {
-                logger.Warn($"Message is for {msg.DeviceName} and not for {machineName}");
+                logger.Warn($"Message is for {msg.DeviceName} - {msg.InstrumentName} and not for {machineName}");
                 return;
             }
 
@@ -90,6 +90,12 @@ namespace Model
         {
             while (true)
             {
+                if (deviceClient == null)
+                {
+                    logger.Error("Device client is not created here.");
+                    return;
+                }
+
                 var resMessage = await deviceClient.ReceiveAsync();
                 if (resMessage == null)
                 {
