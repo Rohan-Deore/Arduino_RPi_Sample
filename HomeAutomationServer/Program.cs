@@ -35,7 +35,15 @@ namespace HomeAutomationServer
                 return;
             }
 
-            deviceMgr.Run();
+            try
+            {
+                deviceMgr.Run();
+            }
+            catch (Exception ex)
+            {
+                logger.Fatal(ex);
+                return;
+            }
         }
     }
 }
