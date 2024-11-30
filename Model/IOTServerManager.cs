@@ -15,7 +15,7 @@ namespace Model
         private ServiceClient? serverClient = null;
         private string? machineName = string.Empty;
         private BackgroundWorker worker = new BackgroundWorker();
-        private GpioController controller = new GpioController();
+        //private GpioController controller = new GpioController();
 
         public IOTServerManager(string connectionString, string machineName)
         {
@@ -40,6 +40,9 @@ namespace Model
         {
             // keep receiving messages.
             // Get device ID from receiving command so that there will always be correct.
+
+            serverClient?.OpenAsync();
+
             while (true)
             {
                 var fbReceiver = serverClient?.GetFeedbackReceiver();
@@ -66,8 +69,11 @@ namespace Model
                     var cts = new CancellationTokenSource();
 
                     await fbReceiver.CompleteAsync(feedbackBatch, cts.Token);
+                    Thread.Sleep(1000);
                 }
             }
+
+            serverClient?.CloseAsync();
         }
 
         public void ProcessMessage(FeedbackRecord fbRecord)
