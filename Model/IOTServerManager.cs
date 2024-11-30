@@ -49,6 +49,7 @@ namespace Model
                     break;
                 }
 
+                Console.Write(". ");
                 var token = new CancellationTokenSource();
                 var feedbackBatch = await fbReceiver.ReceiveAsync(token.Token);
 

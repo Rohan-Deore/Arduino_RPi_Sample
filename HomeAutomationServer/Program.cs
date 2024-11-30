@@ -13,6 +13,7 @@ namespace HomeAutomationServer
             // Use device manager to send pin status to hub at every 10 sec.
             // Create receiver for reading messages from hub
             // Reading messages should toggle status of pins between on and off showing read processing.
+            Console.WriteLine("Starting Home Automation Server");
 
             var connectionString = ConfigurationManager.AppSettings["ConnectionStringHub"];
             var machineName = ConfigurationManager.AppSettings["MachineName"];

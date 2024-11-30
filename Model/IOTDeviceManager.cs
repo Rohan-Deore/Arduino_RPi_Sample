@@ -53,6 +53,7 @@ namespace Model
 
             while (true)
             {
+                Console.Write(". ");
                 // send status here
                 var readValue = (bool)controller.Read(pin);
                 logger.Debug($"Read Pin {pin} status : {readValue}");
