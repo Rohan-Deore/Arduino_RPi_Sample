@@ -42,34 +42,41 @@ namespace Model
             // Get device ID from receiving command so that there will always be correct.
 
             serverClient?.OpenAsync();
+            var fbReceiver = serverClient?.GetFeedbackReceiver();
+            if (fbReceiver == null)
+            {
+                logger.Error("Service client feedback receiver is null");
+                return;
+            }
 
             while (true)
             {
-                var fbReceiver = serverClient?.GetFeedbackReceiver();
-                if (fbReceiver == null)
+                try
                 {
-                    logger.Error("Service client feedback receiver is null");
-                    break;
-                }
+                    Console.Write(". ");
+                    var token = new CancellationTokenSource();
+                    var feedbackBatch = await fbReceiver.ReceiveAsync(token.Token);
 
-                Console.Write(". ");
-                var token = new CancellationTokenSource();
-                var feedbackBatch = await fbReceiver.ReceiveAsync(token.Token);
-
-                if (feedbackBatch != null)
-                {
-                    logger.Debug("Feedback received:");
-                    foreach (var record in feedbackBatch.Records)
+                    if (feedbackBatch != null)
                     {
-                        logger.Debug($"DeviceId: {record.DeviceId}, Status: {record.StatusCode}, Description: {record.Description}");
-                        ProcessMessage(record);
+                        logger.Debug("Feedback received:");
+                        foreach (var record in feedbackBatch.Records)
+                        {
+                            logger.Debug($"DeviceId: {record.DeviceId}, Status: {record.StatusCode}, Description: {record.Description}");
+                            ProcessMessage(record);
+                        }
+
+                        // Complete the feedback batch
+                        var cts = new CancellationTokenSource();
+
+                        await fbReceiver.CompleteAsync(feedbackBatch, cts.Token);
+                        Thread.Sleep(1000);
                     }
-
-                    // Complete the feedback batch
-                    var cts = new CancellationTokenSource();
-
-                    await fbReceiver.CompleteAsync(feedbackBatch, cts.Token);
-                    Thread.Sleep(1000);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    throw;
                 }
             }
 
