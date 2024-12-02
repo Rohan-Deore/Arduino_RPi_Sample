@@ -51,9 +51,19 @@ namespace Model
             var readValue = true;
             logger.Debug($"Read Pin {pin} status : {readValue}");
             IOTMessage message = new IOTMessage(machineName, "Window", pin, readValue);
-            await serverClient.SendAsync(deviceName, message.ToServerMessage());
 
             serverClient?.OpenAsync();
+
+            try
+            {
+                await serverClient?.SendAsync(deviceName, message.ToServerMessage());
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+
             var fbReceiver = serverClient?.GetFeedbackReceiver();
             if (fbReceiver == null)
             {
