@@ -17,6 +17,7 @@ namespace HomeAutomationServer
 
             var connectionString = ConfigurationManager.AppSettings["ConnectionStringHub"];
             var machineName = ConfigurationManager.AppSettings["MachineName"];
+            var deviceName = ConfigurationManager.AppSettings["DeviceID"];
 
             if (connectionString == null || machineName == null)
             {
@@ -27,7 +28,7 @@ namespace HomeAutomationServer
             IOTServerManager deviceMgr;
             try
             {
-                deviceMgr = new IOTServerManager(connectionString, machineName);
+                deviceMgr = new IOTServerManager(connectionString, machineName, deviceName);
             }
             catch (Exception ex)
             {

@@ -1,10 +1,6 @@
-﻿using Azure.Storage.Blobs.Models;
-using Microsoft.Azure.Devices;
-using Newtonsoft.Json;
+﻿using Microsoft.Azure.Devices;
 using NLog;
 using System.ComponentModel;
-using System.Device.Gpio;
-using System.Text;
 
 
 namespace Model
@@ -14,10 +10,11 @@ namespace Model
         private Logger logger = LogManager.GetCurrentClassLogger();
         private ServiceClient? serverClient = null;
         private string? machineName = string.Empty;
+        private string deviceName = string.Empty;
         private BackgroundWorker worker = new BackgroundWorker();
         //private GpioController controller = new GpioController();
 
-        public IOTServerManager(string connectionString, string machineName)
+        public IOTServerManager(string connectionString, string machineID, string deviceID)
         {
             if (connectionString == null)
             {
@@ -25,12 +22,22 @@ namespace Model
                 return;
             }
 
-            if (machineName == null)
+            if (machineID == null)
             {
                 machineName = string.Empty;
                 logger.Warn("Machine Name is empty.");
                 return;
             }
+
+            if (deviceID == null)
+            {
+                deviceName = string.Empty;
+                logger.Warn("Device name is empty");
+                return;
+            }
+
+            machineName = machineID;
+            deviceName = deviceID;
 
             logger.Debug("IOTDevice manager constructor called");
             serverClient = ServiceClient.CreateFromConnectionString(connectionString);
@@ -40,6 +47,11 @@ namespace Model
         {
             // keep receiving messages.
             // Get device ID from receiving command so that there will always be correct.
+            int pin = 24;
+            var readValue = true;
+            logger.Debug($"Read Pin {pin} status : {readValue}");
+            IOTMessage message = new IOTMessage(machineName, "Window", pin, readValue);
+            await serverClient.SendAsync(deviceName, message.ToServerMessage());
 
             serverClient?.OpenAsync();
             var fbReceiver = serverClient?.GetFeedbackReceiver();
