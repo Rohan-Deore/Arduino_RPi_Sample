@@ -89,6 +89,7 @@ namespace Model
 
         private async Task ReadMessagesAsync()
         {
+            logger.Debug("Read messages started.");
             while (true)
             {
                 if (deviceClient == null)
