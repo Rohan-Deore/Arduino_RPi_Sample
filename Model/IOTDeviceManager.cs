@@ -43,6 +43,7 @@ namespace Model
         public void Run()
         {
             worker.DoWork += Worker_DoWork;
+            worker.RunWorkerAsync();
 
             int pin = 23;
             controller.OpenPin(pin, PinMode.Input);
