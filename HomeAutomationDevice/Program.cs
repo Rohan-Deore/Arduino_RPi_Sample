@@ -16,11 +16,14 @@ namespace HomeAutomationDevice
             Console.WriteLine("Starting Home Automation Device");
             var connectionString = ConfigurationManager.AppSettings["ConnectionStringDevice"];
             var machineName = ConfigurationManager.AppSettings["MachineName"];
+            var deviceName = ConfigurationManager.AppSettings["DeviceID"];
             if (connectionString == null || machineName == null)
             {
                 logger.Fatal("Connection string or machine name is defined in config.");
                 return;
             }
+
+            logger.Debug($"Device ID : {deviceName}");
 
             IOTDeviceManager deviceMgr;
             try

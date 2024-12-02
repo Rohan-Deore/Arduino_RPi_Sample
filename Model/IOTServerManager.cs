@@ -43,6 +43,16 @@ namespace Model
             serverClient = ServiceClient.CreateFromConnectionString(connectionString);
         }
 
+        public async Task Run1()
+        {
+            // Working sample application
+            int pin = 24;
+            var readValue = true;
+            logger.Debug($"Read Pin {pin} status : {readValue}");
+            IOTMessage message = new IOTMessage(machineName, "Window", pin, readValue);
+            await serverClient?.SendAsync(deviceName, message.ToServerMessage());
+        }
+
         public async Task Run()
         {
             // keep receiving messages.
@@ -51,8 +61,6 @@ namespace Model
             var readValue = true;
             logger.Debug($"Read Pin {pin} status : {readValue}");
             IOTMessage message = new IOTMessage(machineName, "Window", pin, readValue);
-
-            serverClient?.OpenAsync();
 
             try
             {
@@ -63,6 +71,10 @@ namespace Model
                 logger.Error(ex);
                 throw;
             }
+
+            Thread.Sleep(10000);
+            
+            serverClient?.OpenAsync();
 
             var fbReceiver = serverClient?.GetFeedbackReceiver();
             if (fbReceiver == null)
@@ -92,7 +104,6 @@ namespace Model
                         var cts = new CancellationTokenSource();
 
                         await fbReceiver.CompleteAsync(feedbackBatch, cts.Token);
-                        Thread.Sleep(1000);
                     }
                 }
                 catch (Exception ex)
@@ -100,6 +111,8 @@ namespace Model
                     logger.Error(ex);
                     throw;
                 }
+
+                Thread.Sleep(1000);
             }
 
             serverClient?.CloseAsync();

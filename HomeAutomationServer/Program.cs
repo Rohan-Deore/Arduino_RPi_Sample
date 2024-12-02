@@ -25,6 +25,8 @@ namespace HomeAutomationServer
                 return;
             }
 
+            logger.Debug($"Device ID : {deviceName}");
+
             IOTServerManager deviceMgr;
             try
             {
@@ -45,6 +47,9 @@ namespace HomeAutomationServer
                 logger.Fatal(ex);
                 return;
             }
+
+            Console.WriteLine("Home automation server stopping..");
+            Console.ReadLine();
         }
     }
 }
