@@ -145,14 +145,14 @@ namespace Model
 
         private async Task ReceiveMessagesFromDeviceAsync(CancellationToken ct)
         {
-
+            Console.WriteLine("EventHub consumer client...");
             // Create the consumer using the default consumer group using a direct connection to the service.
             // Information on using the client with a proxy can be found in the README for this quick start, here:
             // https://github.com/Azure-Samples/azure-iot-samples-csharp/tree/main/iot-hub/Quickstarts/ReadD2cMessages/README.md#websocket-and-proxy-support
             await using var consumer = new EventHubConsumerClient(
                 EventHubConsumerClient.DefaultConsumerGroupName,
                 connectionStr,
-                machineName); // ToDo : Rohan there has to be Eventhub name in machine name to get this working.
+                machineName);
 
             Console.WriteLine("Listening for messages on all partitions.");
 
