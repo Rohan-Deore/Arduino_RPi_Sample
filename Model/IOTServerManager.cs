@@ -193,10 +193,11 @@ namespace Model
                     }
                 }
             }
-            catch (TaskCanceledException)
+            catch (TaskCanceledException ex)
             {
                 // This is expected when the token is signaled; it should not be considered an
                 // error in this scenario.
+                logger.Error(ex);
             }
         }
 

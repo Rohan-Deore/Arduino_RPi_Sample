@@ -37,7 +37,7 @@ namespace Model
 
             logger.Debug("IOTDevice manager constructor called");
             deviceClient = DeviceClient.CreateFromConnectionString(connectionString);
-            outputPins = new List<int>() { 24 };
+            outputPins = new List<int>() { 18 };
         }
 
         public void Run()
@@ -45,7 +45,7 @@ namespace Model
             worker.DoWork += Worker_DoWork;
             worker.RunWorkerAsync();
 
-            int pin = 23;
+            int pin = 22;
             controller.OpenPin(pin, PinMode.Input);
             foreach (var p in outputPins)
             {
