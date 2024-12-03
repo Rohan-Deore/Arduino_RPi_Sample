@@ -16,10 +16,12 @@ namespace HomeAutomationServer
             Console.WriteLine("Starting Home Automation Server");
 
             var connectionString = ConfigurationManager.AppSettings["ConnectionStringHub"];
+            var eventHubString = ConfigurationManager.AppSettings["EventHub"];
             var machineName = ConfigurationManager.AppSettings["MachineName"];
             var deviceName = ConfigurationManager.AppSettings["DeviceID"];
 
-            if (connectionString == null || machineName == null)
+            if (connectionString == null || machineName == null || 
+                eventHubString == null || deviceName == null)
             {
                 logger.Fatal("Connection string or machine name is defined in config.");
                 return;
@@ -30,7 +32,7 @@ namespace HomeAutomationServer
             IOTServerManager deviceMgr;
             try
             {
-                deviceMgr = new IOTServerManager(connectionString, machineName, deviceName);
+                deviceMgr = new IOTServerManager(connectionString, eventHubString, machineName, deviceName);
             }
             catch (Exception ex)
             {

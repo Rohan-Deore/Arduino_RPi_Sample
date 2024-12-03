@@ -3,6 +3,7 @@ using NLog;
 using System.ComponentModel;
 using System.Text;
 using Azure.Messaging.EventHubs.Consumer;
+using Newtonsoft.Json;
 
 namespace Model
 {
@@ -11,12 +12,13 @@ namespace Model
         private Logger logger = LogManager.GetCurrentClassLogger();
         private ServiceClient? serverClient = null;
         private string connectionStr = string.Empty;
+        private string eventHubStr = string.Empty;
         private string? machineName = string.Empty;
         private string deviceName = string.Empty;
         private BackgroundWorker worker = new BackgroundWorker();
         //private GpioController controller = new GpioController();
 
-        public IOTServerManager(string connectionString, string machineID, string deviceID)
+        public IOTServerManager(string connectionString, string eventHub, string machineID, string deviceID)
         {
             if (connectionString == null)
             {
@@ -39,21 +41,12 @@ namespace Model
             }
 
             connectionStr = connectionString;
+            eventHubStr = eventHub;
             machineName = machineID;
             deviceName = deviceID;
 
             logger.Debug("IOTDevice manager constructor called");
-            //serverClient = ServiceClient.CreateFromConnectionString(connectionString);
-        }
-
-        public async Task Run1()
-        {
-            // Working sample application
-            int pin = 24;
-            var readValue = true;
-            logger.Debug($"Read Pin {pin} status : {readValue}");
-            IOTMessage message = new IOTMessage(machineName, "Window", pin, readValue);
-            await serverClient?.SendAsync(deviceName, message.ToServerMessage());
+            serverClient = ServiceClient.CreateFromConnectionString(connectionString);
         }
 
         public async Task Run()
@@ -76,15 +69,13 @@ namespace Model
             //ReceiveFeedback();
         }
 
-        private async Task SendDummyMessage()
+        private async Task SendMessage(string instrument, int pin, bool status)
         {
 
             // keep receiving messages.
             // Get device ID from receiving command so that there will always be correct.
-            int pin = 24;
-            var readValue = true;
-            logger.Debug($"Read Pin {pin} status : {readValue}");
-            IOTMessage message = new IOTMessage(machineName, "Window", pin, readValue);
+            logger.Debug($"Write {instrument} Pin : {pin} status : {status}");
+            IOTMessage message = new IOTMessage(machineName, instrument, pin, status);
 
             try
             {
@@ -122,7 +113,7 @@ namespace Model
                         foreach (var record in feedbackBatch.Records)
                         {
                             logger.Debug($"DeviceId: {record.DeviceId}, Status: {record.StatusCode}, Description: {record.Description}");
-                            ProcessMessage(record);
+                            //ProcessMessage(record);
                         }
 
                         // Complete the feedback batch
@@ -143,11 +134,6 @@ namespace Model
             serverClient?.CloseAsync();
         }
 
-        public void ProcessMessage(FeedbackRecord fbRecord)
-        {
-            logger.Info("Data needs to be processed here and send some information to devices.");
-        }
-
         private async Task ReceiveMessagesFromDeviceAsync(CancellationToken ct)
         {
             Console.WriteLine("EventHub consumer client...");
@@ -156,7 +142,7 @@ namespace Model
             // https://github.com/Azure-Samples/azure-iot-samples-csharp/tree/main/iot-hub/Quickstarts/ReadD2cMessages/README.md#websocket-and-proxy-support
             await using var consumer = new EventHubConsumerClient(
                 EventHubConsumerClient.DefaultConsumerGroupName,
-                connectionStr,
+                eventHubStr,
                 machineName);
 
             Console.WriteLine("Listening for messages on all partitions.");
@@ -175,22 +161,39 @@ namespace Model
                 //   https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/eventhub/Azure.Messaging.EventHubs.Processor/README.md
                 await foreach (PartitionEvent partitionEvent in consumer.ReadEventsAsync(ct))
                 {
-                    Console.WriteLine($"\nMessage received on partition {partitionEvent.Partition.PartitionId}:");
-
                     string data = Encoding.UTF8.GetString(partitionEvent.Data.Body.ToArray());
-                    Console.WriteLine($"\tMessage body: {data}");
+                    logger.Debug($"\tMessage body: {data}");
 
-                    Console.WriteLine("\tApplication properties (set by device):");
-                    foreach (KeyValuePair<string, object> prop in partitionEvent.Data.Properties)
+                    var message = JsonConvert.DeserializeObject<IOTMessage>(data);
+                    if (message == null)
                     {
-                        PrintProperties(prop);
+                        logger.Error("Message is null");
+                        continue;
                     }
 
-                    Console.WriteLine("\tSystem properties (set by IoT hub):");
-                    foreach (KeyValuePair<string, object> prop in partitionEvent.Data.SystemProperties)
+                    if (message.InstrumentName == "Door" && message.Status)
                     {
-                        PrintProperties(prop);
+                        await SendMessage("Window", 18, true);
                     }
+                    else if (message.InstrumentName == "Door" && !message.Status)
+                    {
+                        await SendMessage("Window", 18, false);
+                    }
+                    else 
+                    {
+                        logger.Warn("Invalid data received by event hub");
+                    }
+                    //Console.WriteLine("\tApplication properties (set by device):");
+                    //foreach (KeyValuePair<string, object> prop in partitionEvent.Data.Properties)
+                    //{
+                    //    PrintProperties(prop);
+                    //}
+
+                    //Console.WriteLine("\tSystem properties (set by IoT hub):");
+                    //foreach (KeyValuePair<string, object> prop in partitionEvent.Data.SystemProperties)
+                    //{
+                    //    PrintProperties(prop);
+                    //}
                 }
             }
             catch (TaskCanceledException ex)
@@ -201,13 +204,13 @@ namespace Model
             }
         }
 
-        private static void PrintProperties(KeyValuePair<string, object> prop)
-        {
-            string propValue = prop.Value is DateTime time
-                ? time.ToString("O") // using a built-in date format here that includes milliseconds
-                : prop.Value.ToString();
+        //private static void PrintProperties(KeyValuePair<string, object> prop)
+        //{
+        //    string propValue = prop.Value is DateTime time
+        //        ? time.ToString("O") // using a built-in date format here that includes milliseconds
+        //        : prop.Value.ToString();
 
-            Console.WriteLine($"\t\t{prop.Key}: {propValue}");
-        }
+        //    Console.WriteLine($"\t\t{prop.Key}: {propValue}");
+        //}
     }
 }

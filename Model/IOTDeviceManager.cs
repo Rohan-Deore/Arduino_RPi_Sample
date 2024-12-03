@@ -42,15 +42,15 @@ namespace Model
 
         public void Run()
         {
-            worker.DoWork += Worker_DoWork;
-            worker.RunWorkerAsync();
-
             int pin = 22;
             controller.OpenPin(pin, PinMode.Input);
             foreach (var p in outputPins)
             {
                 controller.OpenPin(p, PinMode.Output);
             }
+
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerAsync();
 
             while (true)
             {
@@ -71,11 +71,11 @@ namespace Model
 
         private void UpdateDevice(IOTMessage msg)
         {
-            if (msg.DeviceName != machineName)
-            {
-                logger.Warn($"Message is for {msg.DeviceName} - {msg.InstrumentName} and not for {machineName}");
-                return;
-            }
+            //if (msg.DeviceName != machineName)
+            //{
+            //    logger.Warn($"Message is for {msg.DeviceName} - {msg.InstrumentName} and not for {machineName}");
+            //    return;
+            //}
 
             if (outputPins.Contains(msg.Pin))
             {
