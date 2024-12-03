@@ -51,7 +51,7 @@ namespace Model
 
             worker.DoWork += Worker_DoWork;
             worker.RunWorkerAsync();
-
+            
             while (true)
             {
                 Console.Write(". ");
@@ -117,7 +117,7 @@ namespace Model
 
                 logger.Debug($"Message received : {msgStr}");
                 UpdateDevice(message);
-
+                Thread.Sleep(1000);
             }
         }
     }

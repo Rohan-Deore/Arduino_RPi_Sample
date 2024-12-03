@@ -194,6 +194,7 @@ namespace Model
                     //{
                     //    PrintProperties(prop);
                     //}
+                    Thread.Sleep(1000);
                 }
             }
             catch (TaskCanceledException ex)
