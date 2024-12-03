@@ -43,7 +43,7 @@ namespace Model
             deviceName = deviceID;
 
             logger.Debug("IOTDevice manager constructor called");
-            serverClient = ServiceClient.CreateFromConnectionString(connectionString);
+            //serverClient = ServiceClient.CreateFromConnectionString(connectionString);
         }
 
         public async Task Run1()
@@ -69,6 +69,15 @@ namespace Model
 
             // Run the sample
             await ReceiveMessagesFromDeviceAsync(cts.Token);
+            //await SendDummyMessage();
+
+            Thread.Sleep(10000);
+
+            //ReceiveFeedback();
+        }
+
+        private async Task SendDummyMessage()
+        {
 
             // keep receiving messages.
             // Get device ID from receiving command so that there will always be correct.
@@ -86,10 +95,6 @@ namespace Model
                 logger.Error(ex);
                 throw;
             }
-
-            Thread.Sleep(10000);
-
-            //ReceiveFeedback();
         }
 
         private async Task ReceiveFeedback()
