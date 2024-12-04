@@ -26,7 +26,7 @@ namespace ServerDashboard
             var series = new LineSeries { Title = "Series 1", MarkerType = MarkerType.Circle };
 
             // Add X and Y axes
-            model.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "MMM dd, yyyy" });
+            model.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "MMM dd, yy HH:mm" });
             model.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
             model.Series.Add(series);
 
@@ -67,7 +67,7 @@ namespace ServerDashboard
             var statusVal = status ? 1 : 0;
             series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(time), statusVal));
 
-            //MyModel.InvalidatePlot(true);
+            MyModel.InvalidatePlot(true);
         }
 
         private void BinaryData(PlotModel model, LineSeries series)
