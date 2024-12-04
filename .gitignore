@@ -13,5 +13,7 @@ Model/bin/
 Model/obj/
 RPi.Coms/bin/
 RPi.Coms/obj/
+/ServerDashboard/bin/
+/ServerDashboard/obj/
 /HomeAutomationDevice/App_Prod.config
 /HomeAutomationServer/App_Prod.config

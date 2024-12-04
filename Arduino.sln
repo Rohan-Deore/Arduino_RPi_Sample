@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomationServer", "Hom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{48648390-4C31-4CA9-82C4-AE9CF923CE61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerDashboard", "ServerDashboard\ServerDashboard.csproj", "{BF8897FD-FCB0-4132-B66A-2EC0616FAE0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{48648390-4C31-4CA9-82C4-AE9CF923CE61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48648390-4C31-4CA9-82C4-AE9CF923CE61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48648390-4C31-4CA9-82C4-AE9CF923CE61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF8897FD-FCB0-4132-B66A-2EC0616FAE0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF8897FD-FCB0-4132-B66A-2EC0616FAE0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF8897FD-FCB0-4132-B66A-2EC0616FAE0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF8897FD-FCB0-4132-B66A-2EC0616FAE0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

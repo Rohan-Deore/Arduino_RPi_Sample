@@ -161,6 +161,8 @@ namespace Model
                 //   https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/eventhub/Azure.Messaging.EventHubs.Processor/README.md
                 await foreach (PartitionEvent partitionEvent in consumer.ReadEventsAsync(ct))
                 {
+                    if (partitionEvent.Data.EnqueuedTime.Date < DateTime.Now.Date)
+                        continue;
                     string data = Encoding.UTF8.GetString(partitionEvent.Data.Body.ToArray());
                     logger.Debug($"\tMessage body: {data}");
 
@@ -171,11 +173,11 @@ namespace Model
                         continue;
                     }
 
-                    if (message.InstrumentName == "Door" && message.Status)
+                    if (message.InstrumentName == "Door" && message.Pin == 22 && message.Status)
                     {
                         await SendMessage("Window", 18, true);
                     }
-                    else if (message.InstrumentName == "Door" && !message.Status)
+                    else if (message.InstrumentName == "Door" && message.Pin == 22 && !message.Status)
                     {
                         await SendMessage("Window", 18, false);
                     }
@@ -183,17 +185,17 @@ namespace Model
                     {
                         logger.Warn("Invalid data received by event hub");
                     }
-                    //Console.WriteLine("\tApplication properties (set by device):");
-                    //foreach (KeyValuePair<string, object> prop in partitionEvent.Data.Properties)
-                    //{
-                    //    PrintProperties(prop);
-                    //}
+                    Console.WriteLine("\tApplication properties (set by device):");
+                    foreach (KeyValuePair<string, object> prop in partitionEvent.Data.Properties)
+                    {
+                        PrintProperties(prop);
+                    }
 
-                    //Console.WriteLine("\tSystem properties (set by IoT hub):");
-                    //foreach (KeyValuePair<string, object> prop in partitionEvent.Data.SystemProperties)
-                    //{
-                    //    PrintProperties(prop);
-                    //}
+                    Console.WriteLine("\tSystem properties (set by IoT hub):");
+                    foreach (KeyValuePair<string, object> prop in partitionEvent.Data.SystemProperties)
+                    {
+                        PrintProperties(prop);
+                    }
                     Thread.Sleep(1000);
                 }
             }
@@ -205,13 +207,13 @@ namespace Model
             }
         }
 
-        //private static void PrintProperties(KeyValuePair<string, object> prop)
-        //{
-        //    string propValue = prop.Value is DateTime time
-        //        ? time.ToString("O") // using a built-in date format here that includes milliseconds
-        //        : prop.Value.ToString();
+        private static void PrintProperties(KeyValuePair<string, object> prop)
+        {
+            string propValue = prop.Value is DateTime time
+                ? time.ToString("O") // using a built-in date format here that includes milliseconds
+                : prop.Value.ToString();
 
-        //    Console.WriteLine($"\t\t{prop.Key}: {propValue}");
-        //}
+            Console.WriteLine($"\t\t{prop.Key}: {propValue}");
+        }
     }
 }
