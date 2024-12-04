@@ -16,6 +16,9 @@ namespace Model
         private string? machineName = string.Empty;
         private string deviceName = string.Empty;
         private BackgroundWorker worker = new BackgroundWorker();
+
+        public delegate void StatusDelegate(bool status, DateTime time);
+        public event StatusDelegate StatusEvent;
         //private GpioController controller = new GpioController();
 
         public IOTServerManager(string connectionString, string eventHub, string machineID, string deviceID)
@@ -161,8 +164,6 @@ namespace Model
                 //   https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/eventhub/Azure.Messaging.EventHubs.Processor/README.md
                 await foreach (PartitionEvent partitionEvent in consumer.ReadEventsAsync(ct))
                 {
-                    if (partitionEvent.Data.EnqueuedTime.Date < DateTime.Now.Date)
-                        continue;
                     string data = Encoding.UTF8.GetString(partitionEvent.Data.Body.ToArray());
                     logger.Debug($"\tMessage body: {data}");
 
@@ -196,6 +197,8 @@ namespace Model
                     {
                         PrintProperties(prop);
                     }
+
+                    StatusEvent?.Invoke(message.Status, partitionEvent.Data.EnqueuedTime.DateTime);
                     Thread.Sleep(1000);
                 }
             }
