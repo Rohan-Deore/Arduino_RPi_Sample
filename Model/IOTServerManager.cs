@@ -86,8 +86,8 @@ namespace Model
             }
             catch (Exception ex)
             {
+                // even if there is error for one of the message others should be processed hence no throw here
                 logger.Error(ex);
-                throw;
             }
         }
 

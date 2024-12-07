@@ -59,6 +59,16 @@ namespace ServerDashboard
             BinaryData(modelLB, series2);
             MyModelLB = modelLB;
 
+            var modelRB = new PlotModel { Title = "Device 4" };
+            var series3 = new LineSeries { Title = "Series 4", MarkerType = MarkerType.Circle };
+
+            // Add X and Y axes
+            modelRB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/mm/yy HH:mm", Angle = 45 });
+            modelRB.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
+            modelRB.Series.Add(series3);
+
+            MyModelRB = modelRB;
+
             var connectionString = ConfigurationManager.AppSettings["ConnectionStringHub"];
             var eventHubString = ConfigurationManager.AppSettings["EventHub"];
             var machineName = ConfigurationManager.AppSettings["MachineName"];
@@ -101,14 +111,18 @@ namespace ServerDashboard
             }
             else
             {
+                series = MyModelRB.Series[0] as LineSeries;
                 logger.Fatal($"There is no machine of name : {deviceName}");
-                return;
+                //return;
             }
 
             var statusVal = status ? 1 : 0;
             series?.Points.Add(new DataPoint(DateTimeAxis.ToDouble(time), statusVal));
 
             MyModel.InvalidatePlot(true);
+            MyModelLB.InvalidatePlot(true);
+            MyModelRT.InvalidatePlot(true);
+            MyModelRB.InvalidatePlot(true);
         }
 
         private void BinaryData(PlotModel model, LineSeries series)
