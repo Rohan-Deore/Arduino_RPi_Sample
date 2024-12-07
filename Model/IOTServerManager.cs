@@ -17,7 +17,7 @@ namespace Model
         private string deviceName = string.Empty;
         private BackgroundWorker worker = new BackgroundWorker();
 
-        public delegate void StatusDelegate(bool status, DateTime time);
+        public delegate void StatusDelegate(string machineName, bool status, DateTime time);
         public event StatusDelegate StatusEvent;
         //private GpioController controller = new GpioController();
 
@@ -174,11 +174,11 @@ namespace Model
                         continue;
                     }
 
-                    if (message.InstrumentName == "Door" && message.Pin == 22 && message.Status)
+                    if (message.InstrumentName == "Door" && message.Status)
                     {
                         await SendMessage("Window", 18, true);
                     }
-                    else if (message.InstrumentName == "Door" && message.Pin == 22 && !message.Status)
+                    else if (message.InstrumentName == "Door" && !message.Status)
                     {
                         await SendMessage("Window", 18, false);
                     }
@@ -198,8 +198,8 @@ namespace Model
                         PrintProperties(prop);
                     }
 
-                    StatusEvent?.Invoke(message.Status, partitionEvent.Data.EnqueuedTime.DateTime);
-                    Thread.Sleep(1000);
+                    StatusEvent?.Invoke(message.DeviceName, message.Status, partitionEvent.Data.EnqueuedTime.DateTime);
+                    //Thread.Sleep(1000);
                 }
             }
             catch (TaskCanceledException ex)

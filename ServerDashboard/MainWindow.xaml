@@ -9,6 +9,17 @@
         mc:Ignorable="d"
         Title="IOT Dashboard" Height="450" Width="800">
     <Grid>
-        <oxy:PlotView x:Name="plotView" Model="{Binding MyModel}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <oxy:PlotView Grid.Row="0" Grid.Column="0" x:Name="plotView" Model="{Binding MyModel}" />
+        <oxy:PlotView Grid.Row="1" Grid.Column="0" x:Name="plotViewLB" Model="{Binding MyModelLB}" />
+        <oxy:PlotView Grid.Row="0" Grid.Column="1" x:Name="plotViewRT" Model="{Binding MyModelRT}" />
+        <oxy:PlotView Grid.Row="1" Grid.Column="1" x:Name="plotViewRB" Model="{Binding MyModelRB}" />
     </Grid>
 </Window>

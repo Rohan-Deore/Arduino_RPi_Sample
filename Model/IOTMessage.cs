@@ -36,7 +36,7 @@ namespace Model
         /// </summary>
         public double StatusValue { get; set; }
 
-        public IOTMessage(string? machineName, string instrumentName, int pin, bool readValue)
+        public IOTMessage(string machineName, string instrumentName, int pin, bool readValue)
         {
             DeviceName = machineName;
             InstrumentName = instrumentName;
