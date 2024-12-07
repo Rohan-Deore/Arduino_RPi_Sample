@@ -11,7 +11,7 @@ namespace Model
     {
         private Logger logger = LogManager.GetCurrentClassLogger();
         private DeviceClient? deviceClient = null;
-        private string? machineName = string.Empty;
+        private string machineName = string.Empty;
         private BackgroundWorker worker = new BackgroundWorker();
         private GpioController controller = new GpioController();
 
@@ -20,7 +20,7 @@ namespace Model
         /// </summary>
         private List<int> outputPins = new List<int>();
 
-        public IOTDeviceManager(string connectionString, string machineName)
+        public IOTDeviceManager(string connectionString, string mName)
         {
             if (connectionString == null)
             {
@@ -28,6 +28,7 @@ namespace Model
                 return;
             }
 
+            machineName = mName;
             if (machineName == null)
             {
                 machineName = string.Empty;
