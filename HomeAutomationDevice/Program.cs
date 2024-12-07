@@ -23,6 +23,7 @@ namespace HomeAutomationDevice
                 return;
             }
 
+            logger.Debug($"Machine name : {machineName}");
             logger.Debug($"Device ID : {deviceName}");
 
             IOTDeviceManager deviceMgr;
