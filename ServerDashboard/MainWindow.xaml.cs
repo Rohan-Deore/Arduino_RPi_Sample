@@ -31,7 +31,7 @@ namespace ServerDashboard
             var series = new LineSeries { Title = "Series 1", MarkerType = MarkerType.Circle };
 
             // Add X and Y axes
-            model.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/mm/yy HH:mm", Angle=45 });
+            model.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle=45 });
             model.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
             model.Series.Add(series);
 
@@ -41,7 +41,7 @@ namespace ServerDashboard
             var series1 = new LineSeries { Title = "Series 2", MarkerType = MarkerType.Circle };
 
             // Add X and Y axes
-            modelRT.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/mm/yy HH:mm", Angle = 45 });
+            modelRT.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
             modelRT.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
             modelRT.Series.Add(series1);
 
@@ -63,7 +63,7 @@ namespace ServerDashboard
             var series3 = new LineSeries { Title = "Series 4", MarkerType = MarkerType.Circle };
 
             // Add X and Y axes
-            modelRB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/mm/yy HH:mm", Angle = 45 });
+            modelRB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
             modelRB.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
             modelRB.Series.Add(series3);
 
