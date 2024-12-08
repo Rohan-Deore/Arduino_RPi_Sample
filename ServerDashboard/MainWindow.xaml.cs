@@ -52,7 +52,7 @@ namespace ServerDashboard
             var series2 = new LineSeries { Title = "Series 3", MarkerType = MarkerType.Circle };
 
             // Add X and Y axes
-            modelLB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/mm/yy HH:mm", Angle = 45 });
+            modelLB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
             modelLB.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
             modelLB.Series.Add(series2);
 
