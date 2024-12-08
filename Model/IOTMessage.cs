@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Net.Mail;
 using System.Text;
 using MADC = Microsoft.Azure.Devices.Client;
 using MAD = Microsoft.Azure.Devices;

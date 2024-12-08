@@ -55,8 +55,9 @@ namespace ServerDashboard
             modelLB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
             modelLB.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
             modelLB.Series.Add(series2);
-
-            BinaryData(modelLB, series2);
+            Task.Run(() => {
+                DummyDatainLB(modelLB, series2);
+                });
             MyModelLB = modelLB;
 
             var modelRB = new PlotModel { Title = "Device 4" };
@@ -120,7 +121,6 @@ namespace ServerDashboard
             series?.Points.Add(new DataPoint(DateTimeAxis.ToDouble(time), statusVal));
 
             MyModel.InvalidatePlot(true);
-            MyModelLB.InvalidatePlot(true);
             MyModelRT.InvalidatePlot(true);
             MyModelRB.InvalidatePlot(true);
         }
@@ -137,6 +137,35 @@ namespace ServerDashboard
             // Add X and Y axes
             model.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "MMM dd, yyyy" });
             model.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
+        }
+
+        private void DummyDatainLB(PlotModel model, LineSeries series)
+        {
+            int date = 0;
+            int month = 1;
+            int year = 2024;
+            var rand = new Random();
+
+            while (true)
+            {
+                Thread.Sleep(5000);
+
+                if (date == 30)
+                {
+                    date = 0;
+                    month++;
+                }
+
+                if (month > 12)
+                {
+                    year++;
+                }
+
+                date++;
+                var num = rand.Next(0, 2);
+                series.Points.Add(new DataPoint(DateTimeAxis.ToDouble(new DateTime(year, month, date)), num));
+                MyModelLB.InvalidatePlot(true);
+            }
         }
     }
 }
