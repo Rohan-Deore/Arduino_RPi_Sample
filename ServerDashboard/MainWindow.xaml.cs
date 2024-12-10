@@ -27,48 +27,10 @@ namespace ServerDashboard
 
             DataContext = this;
 
-            var model = new PlotModel { Title = "Device 1" };
-            var series = new LineSeries { Title = "Series 1", MarkerType = MarkerType.Circle };
+            CreatePlots();
 
-            // Add X and Y axes
-            model.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle=45 });
-            model.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
-            model.Series.Add(series);
-
-            MyModel = model;
-
-            var modelRT = new PlotModel { Title = "Device 2" };
-            var series1 = new LineSeries { Title = "Series 2", MarkerType = MarkerType.Circle };
-
-            // Add X and Y axes
-            modelRT.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
-            modelRT.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
-            modelRT.Series.Add(series1);
-
-            MyModelRT = modelRT;
-
-
-            var modelLB = new PlotModel { Title = "Device 3" };
-            var series2 = new LineSeries { Title = "Series 3", MarkerType = MarkerType.Circle };
-
-            // Add X and Y axes
-            modelLB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
-            modelLB.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
-            modelLB.Series.Add(series2);
-            Task.Run(() => {
-                DummyDatainLB(modelLB, series2);
-                });
-            MyModelLB = modelLB;
-
-            var modelRB = new PlotModel { Title = "Device 4" };
-            var series3 = new LineSeries { Title = "Series 4", MarkerType = MarkerType.Circle };
-
-            // Add X and Y axes
-            modelRB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
-            modelRB.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
-            modelRB.Series.Add(series3);
-
-            MyModelRB = modelRB;
+            Database.DatabaseManager dbManager = new Database.DatabaseManager();
+            //dbManager.CreateDatabase();
 
             var connectionString = ConfigurationManager.AppSettings["ConnectionStringHub"];
             var eventHubString = ConfigurationManager.AppSettings["EventHub"];
@@ -97,6 +59,53 @@ namespace ServerDashboard
                 logger.Fatal($"Device manager creation failed due to : {ex}");
                 return;
             }
+        }
+
+        private void CreatePlots()
+        {
+            var model = new PlotModel { Title = "Device 1" };
+            var series = new LineSeries { Title = "Series 1", MarkerType = MarkerType.Circle };
+
+            // Add X and Y axes
+            model.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
+            model.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
+            model.Series.Add(series);
+
+            MyModel = model;
+
+            var modelRT = new PlotModel { Title = "Device 2" };
+            var series1 = new LineSeries { Title = "Series 2", MarkerType = MarkerType.Circle };
+
+            // Add X and Y axes
+            modelRT.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
+            modelRT.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
+            modelRT.Series.Add(series1);
+
+            MyModelRT = modelRT;
+
+
+            var modelLB = new PlotModel { Title = "Device 3" };
+            var series2 = new LineSeries { Title = "Series 3", MarkerType = MarkerType.Circle };
+
+            // Add X and Y axes
+            modelLB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
+            modelLB.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
+            modelLB.Series.Add(series2);
+            Task.Run(() =>
+            {
+                DummyDatainLB(modelLB, series2);
+            });
+            MyModelLB = modelLB;
+
+            var modelRB = new PlotModel { Title = "Device 4" };
+            var series3 = new LineSeries { Title = "Series 4", MarkerType = MarkerType.Circle };
+
+            // Add X and Y axes
+            modelRB.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, Title = "Time", StringFormat = "dd/MM/yy HH:mm", Angle = 45 });
+            modelRB.Axes.Add(new CategoryAxis { Position = AxisPosition.Left, Title = "Value", ItemsSource = new[] { "False", "True" } });
+            modelRB.Series.Add(series3);
+
+            MyModelRB = modelRB;
         }
 
         private void DeviceMgr_StatusEvent(string deviceName, bool status, DateTime time)
