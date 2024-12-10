@@ -20,3 +20,5 @@ RPi.Coms/obj/
 /ServerDashboard/App_Prod.config
 /IOTServerWebApp/bin/
 /IOTServerWebApp/obj/
+/Database/bin/
+/Database/obj/

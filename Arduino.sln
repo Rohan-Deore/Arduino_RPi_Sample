@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerDashboard", "ServerDa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOTServerWebApp", "IOTServerWebApp\IOTServerWebApp.csproj", "{AE58DF0A-16E0-4830-A972-A2D2CCEDE75D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{E43A3171-4735-432F-B4A7-21E56D65783D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{AE58DF0A-16E0-4830-A972-A2D2CCEDE75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE58DF0A-16E0-4830-A972-A2D2CCEDE75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE58DF0A-16E0-4830-A972-A2D2CCEDE75D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E43A3171-4735-432F-B4A7-21E56D65783D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E43A3171-4735-432F-B4A7-21E56D65783D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E43A3171-4735-432F-B4A7-21E56D65783D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E43A3171-4735-432F-B4A7-21E56D65783D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
