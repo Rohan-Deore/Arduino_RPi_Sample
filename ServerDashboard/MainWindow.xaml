@@ -29,12 +29,17 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <!--<RowDefinition/>-->
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="Bold">Overall Equipment Effectiveness (OEE)</Label>
             <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold">RaspberryPi-1</Label>
             <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" FontSize="15" FontWeight="Bold">RaspberryPi-2</Label>
             <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" x:Name="OEELabel1" FontSize="15" FontWeight="Bold">Number</Label>
             <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" x:Name="OEELabel2" FontSize="15" FontWeight="Bold">Number</Label>
+            <!--<Canvas Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">
+                <Rectangle Width="5" Height="15" Fill="Green" Stroke="Black"></Rectangle>
+            </Canvas>
+            <Canvas Grid.Row="3" Grid.Column="1" ></Canvas>-->
         </Grid>
         <!--<oxy:PlotView Grid.Row="1" Grid.Column="1" x:Name="plotViewRB" Model="{Binding MyModelRB}" />-->
     </Grid>
