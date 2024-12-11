@@ -40,6 +40,9 @@ namespace ServerDashboard
             PopulateData(devices1);
             PopulateData(devices2);
 
+            OEELabel1.Content = CalculateOEE(devices1);
+            OEELabel2.Content = CalculateOEE(devices2);
+
             var connectionString = ConfigurationManager.AppSettings["ConnectionStringHub"];
             var eventHubString = ConfigurationManager.AppSettings["EventHub"];
             var machineName = ConfigurationManager.AppSettings["MachineName"];
@@ -126,6 +129,42 @@ namespace ServerDashboard
                     Thread.Sleep(1000);
                 }
             });
+        }
+
+        private double CalculateOEE(List<Device> devices1)
+        {
+            DateTime minValue = DateTime.MaxValue;
+            DateTime maxValue = DateTime.MinValue;
+            int totalOnTime = 0;
+            int totalOffTime = 0;
+            foreach (var device in devices1)
+            {
+                if (minValue > device.StatusTime)
+                {
+                    minValue = device.StatusTime;
+                }
+
+                if (maxValue < device.StatusTime)
+                {
+                    maxValue = device.StatusTime;
+                }
+
+                // interval time is 1 min so just add 1 min at every step
+                if (device.Status)
+                {
+                    totalOnTime++;
+                }
+                else
+                {
+                    totalOffTime++;
+                }
+            }
+
+            var totalTime = maxValue - minValue;
+            var theTime = totalTime.TotalMinutes;
+            var theTimeMin = totalOnTime + totalOffTime;
+
+            return Math.Round((totalOnTime / theTime) * 100, 2);
         }
 
         private void DeviceMgr_StatusEvent(string deviceName, bool status, DateTime time)
