@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using Database;
+using Model;
 using NLog;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -31,6 +32,13 @@ namespace ServerDashboard
 
             Database.DatabaseManager dbManager = new Database.DatabaseManager();
             //dbManager.CreateDatabase();
+            //dbManager.AddData();
+            List<Device> devices1 = new List<Device>();
+            List<Device> devices2 = new List<Device>();
+            dbManager.GetData(ref devices1, ref devices2);
+
+            PopulateData(devices1);
+            PopulateData(devices2);
 
             var connectionString = ConfigurationManager.AppSettings["ConnectionStringHub"];
             var eventHubString = ConfigurationManager.AppSettings["EventHub"];
@@ -106,6 +114,18 @@ namespace ServerDashboard
             modelRB.Series.Add(series3);
 
             MyModelRB = modelRB;
+        }
+
+        private void PopulateData(List<Device> devices1)
+        {
+            Task.Run(() =>
+            {
+                foreach (var device in devices1)
+                {
+                    DeviceMgr_StatusEvent(device.DeviceName, device.Status, device.StatusTime);
+                    Thread.Sleep(1000);
+                }
+            });
         }
 
         private void DeviceMgr_StatusEvent(string deviceName, bool status, DateTime time)
