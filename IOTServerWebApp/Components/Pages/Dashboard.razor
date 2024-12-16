@@ -1,9 +1,52 @@
 ﻿@page "/dashboard"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
 <PageTitle>Dashboard</PageTitle>
 
 <h1>IOT Dashboard</h1>
 Demonstrating IOT capabilities.
-
+<div id="LogViewer">
+    @if (devices == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Device name</th>
+                    <th>Status</th>
+                    <th>Status time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dev in devices)
+                {
+                    <tr>
+                        <td>@dev.DeviceName</td>
+                        <td>@dev.Status</td>
+                        <td>@dev.StatusTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
 @code {
+    @using Database;
+    private List<Device> devices = new List<Device>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+
+        Database.DatabaseManager dbManager = new Database.DatabaseManager();
+        //dbManager.CreateDatabase();
+        //dbManager.AddData();
+        //List<Device> devices1 = new List<Device>();
+        List<Device> devices2 = new List<Device>();
+        dbManager.GetData(ref devices, ref devices2);
+    }
 }
