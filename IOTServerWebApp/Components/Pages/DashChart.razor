@@ -1,0 +1,47 @@
+﻿@page "/dashchart"
+
+<h3>DashChart</h3>
+<head> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> </head>
+<div id="Chart">
+    <canvas id="myChart" width="400" height="200">
+    </canvas>
+    <script>
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        console.log("Some data to be logged");
+        var myChart = new Chart(ctx,
+            {
+                type: 'line',
+                data:
+                {
+                    labels: ['January', 'February', 'March'],
+                    datasets: [
+                        {
+                            label: 'Sample Data',
+                            data: [ 10, 20, 15 ],
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 1 }
+                    ] 
+            },
+                            options:
+                            {
+                                scales: { y: { beginAtZero: true } }
+                            }
+            }
+        );
+    </script>
+</div>
+
+
+@code {
+    public List<string> Labels { get; set; }
+    public List<int> Data { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+        Labels = new List<string> { "January", "February", "March", "April", "May" };
+        Data = new List<int> { 10, 20, 15, 30, 25 };
+    }
+}
