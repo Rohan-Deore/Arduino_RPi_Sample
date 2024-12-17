@@ -33,33 +33,76 @@
     </script>
 </head>
 <div id="Chart">
-    <button class="btn btn-primary" @onclick="OnLoadBtnClick">Load Chart </button>
     <canvas id="myChart" width="400" height="200"></canvas>
+    <button class=" btn btn-primary" @onclick="OnPreviousBtnClick">Previous</button>
+    <button class=" btn btn-primary" @onclick="OnNextBtnClick">Next</button>
 </div>
 
 
 @code {
+    @using Database;
+
     [Inject]
     IJSRuntime JS { get; set; }
-    
-    public List<string> Labels { get; set; }
-    public List<int> Data { get; set; }
+
+    private List<Device> devices = new List<Device>();
+
+    public List<bool> status = new List<bool>();
+    public List<DateTime> statusTime = new List<DateTime>();
+
+    int windowStart = 0;
 
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine("Initialized called");
-        Labels = new List<string> { "January", "February", "March", "April", "May" };
-        Data = new List<int> { 10, 20, 15, 30, 25 };
 
-        //await JS.InvokeVoidAsync("drawChart", Labels, Data);
+        Database.DatabaseManager dbManager = new Database.DatabaseManager();
+        List<Device> devices2 = new List<Device>();
+        dbManager.GetData(ref devices, ref devices2);
+
+        if (devices.Count <=60)
+        {
+            throw new Exception("Minimum number of data points are not present");
+        }
+
+        PopulateChartData();
     }
 
-    private void OnLoadBtnClick()
-    { 
-        Console.WriteLine("Button clicked called");
+    private void PopulateChartData()
+    {
+        status.Clear();
+        statusTime.Clear();
+        for (int i = windowStart; i < windowStart + 60; i++)
+        {
+            var dev = devices[i];
+            status.Add(dev.Status);
+            statusTime.Add(dev.StatusTime);
+        }
+    }
 
-        // Trigger the JavaScript function to draw the chart
-        JS.InvokeVoidAsync("drawChart", Labels, Data);
+    private void OnNextBtnClick()
+    {
+        Console.WriteLine("Next button clicked");
+        windowStart += 10;
+        if (windowStart > devices.Count - 60)
+        {
+            windowStart = devices.Count - 60;
+        }
+
+        PopulateChartData();
+        JS.InvokeVoidAsync("drawChart", statusTime, status);
+    }
+
+    private void OnPreviousBtnClick()
+    {
+        Console.WriteLine("Previous button clicked");
+        windowStart -= 10;
+        if (windowStart < 0)
+        {
+            windowStart = 0;
+        }
+        PopulateChartData();
+        JS.InvokeVoidAsync("drawChart", statusTime, status);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -69,7 +112,7 @@
             Console.WriteLine("After render called");
 
             // Trigger the JavaScript function to draw the chart
-            await JS.InvokeVoidAsync("drawChart", Labels, Data);
+            await JS.InvokeVoidAsync("drawChart", statusTime, status);
             await base.OnAfterRenderAsync(firstRender);
         }
     }
