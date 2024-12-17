@@ -1,47 +1,76 @@
 ﻿@page "/dashchart"
+@rendermode InteractiveServer
 
 <h3>DashChart</h3>
-<head> <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> </head>
-<div id="Chart">
-    <canvas id="myChart" width="400" height="200">
-    </canvas>
+<head> 
+    <script src="/lib/chart.js"></script>
     <script>
-
+        function drawChart(labels, data)
+        {
+        console.log("Draw chart being called.");
         var ctx = document.getElementById('myChart').getContext('2d');
-        console.log("Some data to be logged");
-        var myChart = new Chart(ctx,
-            {
-                type: 'line',
-                data:
-                {
-                    labels: ['January', 'February', 'March'],
-                    datasets: [
-                        {
-                            label: 'Sample Data',
-                            data: [ 10, 20, 15 ],
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderWidth: 1 }
-                    ] 
-            },
-                            options:
-                            {
-                                scales: { y: { beginAtZero: true } }
-                            }
-            }
+        new Chart(ctx,
+        {
+        type: 'line',
+        data:
+        {
+        labels: labels,
+        datasets:
+        [
+        {
+        label: 'Sample Data',
+        data: data,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderWidth: 1
+        }
+        ]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+        }
         );
+        }
     </script>
+</head>
+<div id="Chart">
+    <button class="btn btn-primary" @onclick="OnLoadBtnClick">Load Chart </button>
+    <canvas id="myChart" width="400" height="200"></canvas>
 </div>
 
 
 @code {
+    [Inject]
+    IJSRuntime JS { get; set; }
+    
     public List<string> Labels { get; set; }
     public List<int> Data { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(500);
+        Console.WriteLine("Initialized called");
         Labels = new List<string> { "January", "February", "March", "April", "May" };
         Data = new List<int> { 10, 20, 15, 30, 25 };
+
+        //await JS.InvokeVoidAsync("drawChart", Labels, Data);
+    }
+
+    private void OnLoadBtnClick()
+    { 
+        Console.WriteLine("Button clicked called");
+
+        // Trigger the JavaScript function to draw the chart
+        JS.InvokeVoidAsync("drawChart", Labels, Data);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Console.WriteLine("After render called");
+
+            // Trigger the JavaScript function to draw the chart
+            await JS.InvokeVoidAsync("drawChart", Labels, Data);
+            await base.OnAfterRenderAsync(firstRender);
+        }
     }
 }
